@@ -15,6 +15,9 @@ GameObject:
   - component: {fileID: 2439280109293905887}
   - component: {fileID: 3313540786046931640}
   - component: {fileID: -886141001329137631}
+  - component: {fileID: -9086738166972393673}
+  - component: {fileID: 1993199856958264733}
+  - component: {fileID: 7509519992117099544}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -137,6 +140,51 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
+--- !u!114 &-9086738166972393673
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500829499347730933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b41e7f1b9ab198c43aeadd01ac163e6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _knockBackTime: 0.2
+--- !u!114 &1993199856958264733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500829499347730933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f080c45ae1cfe64ab0b7f40d3fe9386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMat: {fileID: 2100000, guid: 94e4e6a626acff749a61075da466a11c, type: 2}
+  whiteFlashMat: {fileID: 2100000, guid: 04ab2f19df2225845aa79bf8e057d564, type: 2}
+  flashTime: 0.1
+--- !u!114 &7509519992117099544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500829499347730933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98b80681e5997c24d8bc75ae4eebd0bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  colors:
+  - {r: 0.5529412, g: 0.78039217, b: 1, a: 1}
+  - {r: 1, g: 0.5254902, b: 0.5254902, a: 1}
+  - {r: 0.4117647, g: 1, b: 0.5411765, a: 1}
+  fillSpriteRenderer: {fileID: 7564454557696005338}
 --- !u!1 &5153281642299242202
 GameObject:
   m_ObjectHideFlags: 0
@@ -211,7 +259,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 1899769647, guid: 01b49b46e6384a6419be35fbdd9b5c1a, type: 3}
-  m_Color: {r: 1, g: 0.6392157, b: 0.6392157, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

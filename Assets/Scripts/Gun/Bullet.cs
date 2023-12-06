@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed = 10f;
     [SerializeField] private int _damageAmount = 1;
+    [SerializeField] private float knockbackThrust = 20f;
 
     private Vector2 _fireDirection;
     private Gun _gun;
@@ -31,7 +32,13 @@ public class Bullet : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D other) {
         Health health = other.gameObject.GetComponent<Health>();
         health?.TakeDamage(_damageAmount);
+
+        Knockback knockback = other.gameObject.GetComponent<Knockback>();
+        knockback?.GetKnockedBack(PlayerController.Instance.transform.position ,knockbackThrust);
+
+        Flash flash = other.gameObject.GetComponent<Flash>();
+        flash?.StartFlash();
+
         _gun.ReleaseBulletFromPool(this);
-       //Destroy(this.gameObject);
     }
 }
