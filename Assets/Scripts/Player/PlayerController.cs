@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public Vector2 MoveInput => _frameInput.Move;
     public static PlayerController Instance;
     public static Action OnJump;
 
@@ -86,7 +87,7 @@ public class PlayerController : MonoBehaviour
     {
         return transform.eulerAngles.y == 0;
     }
-    private bool CheckGrounded()
+    public bool CheckGrounded()
     {
         Collider2D isGrounded = Physics2D.OverlapBox(feetTransform.position, groundCheck, 0f, groundLayer);
         return isGrounded;
