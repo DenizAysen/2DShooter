@@ -7,9 +7,13 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4792461631084159854, guid: 88d498758b158ee47b91d6743e26daa9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: ac986885fe5d7a64fa76bac46367b75d, type: 2}
     - target: {fileID: 4792461631084159855, guid: 88d498758b158ee47b91d6743e26daa9, type: 3}
       propertyPath: m_Name
-      value: Base Death VFX
+      value: Enemy Death VFX Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4792461631084159856, guid: 88d498758b158ee47b91d6743e26daa9, type: 3}
       propertyPath: m_RootOrder
