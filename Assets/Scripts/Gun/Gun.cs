@@ -12,10 +12,13 @@ public class Gun : MonoBehaviour
     [SerializeField] private Transform _bulletSpawnPoint;
     [SerializeField] private Bullet _bulletPrefab;
     [SerializeField] private Transform bulletParent;
-    [SerializeField] private float gunFireCD = .5f; 
+    [SerializeField] private float gunFireCD = .5f;
+    [SerializeField] private GameObject muzzleFlash;
+    [SerializeField] private float muzzleFlashTime = .05f;
     #endregion
 
     #region Privates
+    private Coroutine _muzzleFlashRoutine;
     private static readonly int FIRE_HASH = Animator.StringToHash("Fire");
     private ObjectPool<Bullet> _bulletPool;
     private Vector2 _mousePos;
@@ -42,6 +45,7 @@ public class Gun : MonoBehaviour
         OnShoot += ShootProjectile;
         OnShoot += FireAnimation;
         OnShoot += GunScreenShake;
+        OnShoot += MuzzleFlash;
     }
     private void OnDisable()
     {
@@ -52,6 +56,7 @@ public class Gun : MonoBehaviour
         OnShoot -= ShootProjectile;
         OnShoot -= FireAnimation;
         OnShoot -= GunScreenShake;
+        OnShoot -= MuzzleFlash;
     }
     public void ReleaseBulletFromPool(Bullet bullet)
     {
@@ -104,5 +109,20 @@ public class Gun : MonoBehaviour
         _direction = PlayerController.Instance.transform.InverseTransformPoint(_mousePos);
         float angle = Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg;
         transform.localRotation = Quaternion.Euler(0, 0, angle);
+    }
+    private void MuzzleFlash()
+    {
+        if(_muzzleFlashRoutine != null)
+        {
+            StopCoroutine(_muzzleFlashRoutine);
+        }
+
+        _muzzleFlashRoutine = StartCoroutine(MuzzleFlashRoutine());
+    }
+    private IEnumerator MuzzleFlashRoutine()
+    {
+        muzzleFlash.SetActive(true);
+        yield return new WaitForSeconds(muzzleFlashTime);
+        muzzleFlash.SetActive(false);
     }
 }
