@@ -2,13 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class DiscoBallManager : MonoBehaviour
 {
-    [SerializeField] private float discoBallPartyTime = 2f;
+    private static Action OnDiscoBallHitEvent;
 
-    public static Action OnDiscoBallHitEvent;
+    [SerializeField] private float discoBallPartyTime = 2f;
+    [SerializeField] private Light2D globalLight;
+    [SerializeField] private float discoGlobalLightIntensity = .2f;
+
+    private float _defaultGlobalLightIntensity;
+    private Coroutine _discoCoroutine;
     private ColorSpotLight[] _allSpotLigts;
+    private void Awake()
+    {
+        _defaultGlobalLightIntensity = globalLight.intensity;
+    }
     private void OnEnable()
     {
         SubscribeEvents();
@@ -31,25 +41,28 @@ public class DiscoBallManager : MonoBehaviour
     {
         OnDiscoBallHitEvent -= DimTheLights;
     }
+    public void DiscoBallParty()
+    {
+        if (_discoCoroutine != null) 
+            return;
+
+        OnDiscoBallHitEvent?.Invoke();
+    }
 
     private void DimTheLights()
     {
-        StartCoroutine(DimTheLightsRoutine(_allSpotLigts));
+        foreach (ColorSpotLight spotLight in _allSpotLigts)
+        {
+            StartCoroutine(spotLight.SpotLightDiscoParty(discoBallPartyTime));
+        }
+        _discoCoroutine = StartCoroutine(GlobalLightResetRoutine());
+
     }
-    private IEnumerator DimTheLightsRoutine(ColorSpotLight[] colorSpotLights)
+   private IEnumerator GlobalLightResetRoutine()
     {
-        foreach (ColorSpotLight colorSpotLight in colorSpotLights)
-        {
-            Debug.Log(colorSpotLight.gameObject.name + " default rotate speed : " + colorSpotLight.rotationSpeed);
-            colorSpotLight.rotationSpeed *= 3f;
-            Debug.Log(colorSpotLight.gameObject.name + " new rotate speed : " + colorSpotLight.rotationSpeed);
-        }
-
+        globalLight.intensity = discoGlobalLightIntensity;
         yield return new WaitForSeconds(discoBallPartyTime);
-
-        foreach (ColorSpotLight colorSpotLight in colorSpotLights)
-        {
-            colorSpotLight.rotationSpeed /= 3;
-        }
+        globalLight.intensity = _defaultGlobalLightIntensity;
+        _discoCoroutine = null;
     }
 }
