@@ -6,7 +6,7 @@ using UnityEngine.Pool;
 using Cinemachine;
 public class Gun : MonoBehaviour
 {
-    public Action OnShoot;
+    public static Action OnShoot;
 
     #region SerializedFields
     [SerializeField] private Transform _bulletSpawnPoint;
