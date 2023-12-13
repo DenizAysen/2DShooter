@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7c7245f585316b043b3910561a98976a, type: 3}
-  m_Name: Jump
+  m_Name: Fight Music
   m_EditorClassIdentifier: 
-  AudioType: 0
-  Clip: {fileID: 8300000, guid: 7d31f85f92629004c9b1d621022e1f56, type: 3}
-  Loop: 0
+  AudioType: 1
+  Clip: {fileID: 8300000, guid: 1e16030658ea03f42b0f49373261d21e, type: 3}
+  Loop: 1
   RandomizePitch: 0
   RandomPitchRangeModifier: 0.1
-  Volume: 0.5
+  Volume: 0.68
   Pitch: 1

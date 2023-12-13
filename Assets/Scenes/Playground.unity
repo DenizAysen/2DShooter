@@ -482,7 +482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6afd3edf1cc1a4ca3cd7ffcad0e34d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  discoBallPartyTime: 5
+  discoBallPartyTime: 7
   globalLight: {fileID: 619394801}
   discoGlobalLightIntensity: 0.2
 --- !u!1001 &303728119
@@ -7855,9 +7855,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c62f7e363cd52b42a17983e4ddf149f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gunShoot: {fileID: 11400000, guid: e7be8a4f62226f24bbe3352f26b68254, type: 2}
-  jumpSO: {fileID: 11400000, guid: b91b0eb5d6f50a142bca80177240614c, type: 2}
-  SoundObject: {fileID: 1441909752}
+  masterVolume: 1
+  soundsCollectionSO: {fileID: 11400000, guid: 970163b1ed4145f408cf9ba90b821b23, type: 2}
+  sfxMixerGroup: {fileID: 8978597544193863897, guid: d6a10f9a736c72e499572e03eb10b7e9, type: 2}
+  musicMixerGroup: {fileID: -3884449770113366067, guid: d6a10f9a736c72e499572e03eb10b7e9, type: 2}
 --- !u!1 &1441909752
 GameObject:
   m_ObjectHideFlags: 0
