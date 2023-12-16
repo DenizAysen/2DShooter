@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 MoveInput => _frameInput.Move;
     public static PlayerController Instance;
     public static Action OnJump;
-    public static Action action1;
+    public static Action OnJetpack;
 
     #region Serialized Fields
     [SerializeField] private float _jumpStrength = 7f;
@@ -18,12 +18,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float extraGravity = 700f;
     [SerializeField] private float gravityDelay = .2f;
     [SerializeField] private float coyoteTime = .5f;
+    [SerializeField] private float jetpackTime = .6f;
+    [SerializeField] private TrailRenderer jetpackTrailRenderer;
+    [SerializeField] private float jetpackStrength = 11f;
     #endregion
 
     #region Privates
     private PlayerInput _playerInput;
     private FrameInput _frameInput;
     private bool _isGrounded = false;
+    private Coroutine _jetpackRoutine;
     private bool _doubleJumpAvaible;
     private float _timeInAir;
     private float _coyoteTimer;
@@ -45,6 +49,7 @@ public class PlayerController : MonoBehaviour
     private void SubscribeEvents()
     {
         OnJump += ApplyJumpForce;
+        OnJetpack += StartJetpack;
     }
     private void OnDisable()
     {
@@ -53,6 +58,7 @@ public class PlayerController : MonoBehaviour
     private void UnsubscribeEvents()
     {
         OnJump -= ApplyJumpForce;
+        OnJetpack -= StartJetpack;
     }
     private void Update()
     {
@@ -62,6 +68,7 @@ public class PlayerController : MonoBehaviour
         HandleJump();
         HandleSpriteFlip();
         GravityDelay();
+        Jetpack();
     }
 
     private void FixedUpdate()
@@ -181,5 +188,30 @@ public class PlayerController : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0f, 0f, 0f);
         }
-    } 
+    }
+    private void Jetpack()
+    {
+        if (!_frameInput.Jetpack || _jetpackRoutine != null) return;
+
+        OnJetpack?.Invoke();
+    }
+    private void StartJetpack()
+    {
+        _jetpackRoutine = StartCoroutine(JetpackRoutine());
+        jetpackTrailRenderer.emitting = true;
+    }
+    private IEnumerator JetpackRoutine()
+    {
+        float jetTime = 0f;
+
+        while(jetTime < jetpackTime)
+        {
+            jetTime += Time.deltaTime;
+            _rigidBody.velocity = Vector2.up * jetpackStrength;
+            yield return null;
+        }
+
+        _jetpackRoutine = null;
+        jetpackTrailRenderer.emitting = false;
+    }
 }
