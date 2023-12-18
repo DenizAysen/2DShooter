@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -9,11 +10,11 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private SoundsCollectionSO soundsCollectionSO;
 
     [SerializeField] private AudioMixerGroup sfxMixerGroup;
-    [SerializeField] private AudioMixerGroup musicMixerGroup; 
+    [SerializeField] private AudioMixerGroup musicMixerGroup;
     #endregion
 
+    private Coroutine _grenadeRoutine;
     private AudioSource _currentMusic;
-
     #region Unity Methods
     private void OnEnable()
     {
@@ -24,7 +25,10 @@ public class AudioManager : MonoBehaviour
         Gun.OnShoot += OnShoot;
         PlayerController.OnJump += OnJump;
         PlayerController.OnJetpack += OnJetpack;
+        PlayerController.OnGrenade += OnGrenadeShoot;
         Health.OnDeath += OnDeath;
+        Gun.OnGrenadeExplodeWithBeepLoop += OnGrenade;
+        Gun.OnGrenadeExplode += ExplosionSound;
         DiscoBallManager.OnDiscoBallHitEvent += DiscoBallMusic;
     }
 
@@ -38,7 +42,10 @@ public class AudioManager : MonoBehaviour
         Gun.OnShoot -= OnShoot;
         PlayerController.OnJump -= OnJump;
         PlayerController.OnJetpack -= OnJetpack;
+        PlayerController.OnGrenade -= OnGrenadeShoot;
         Health.OnDeath -= OnDeath;
+        Gun.OnGrenadeExplodeWithBeepLoop -= OnGrenade;
+        Gun.OnGrenadeExplode -= ExplosionSound;
         DiscoBallManager.OnDiscoBallHitEvent -= DiscoBallMusic;
     }
     private void Start()
@@ -152,6 +159,35 @@ public class AudioManager : MonoBehaviour
     {
         PlayRandomSound(soundsCollectionSO.Jetpack);
     }
+    private void OnGrenadeShoot()
+    {
+        PlayRandomSound(soundsCollectionSO.GrenadeShoot);
+    }
+    private void OnGrenade(Grenade grenade)
+    {
+        _grenadeRoutine = StartCoroutine(GrenadeExplosionWithBeepSound(grenade));
+    }
+    private IEnumerator GrenadeExplosionWithBeepSound(Grenade grenade)
+    {
+       
+        for (int i = 0; i < 3; i++)
+        {
+            yield return new WaitForSeconds(.5f);
+            if (grenade.CanBeep() == false)
+            {
+                break;
+            }
+            PlayRandomSound(soundsCollectionSO.GrenadeBeep);          
+            yield return new WaitForSeconds(1f);
+        }
+
+        if(grenade.CanBeep()) ExplosionSound(grenade);
+
+    }
+    private void ExplosionSound(Grenade grenade)
+    {
+        PlayRandomSound(soundsCollectionSO.GrenadeExplosion);
+    }
     #endregion
 
     #region Music
@@ -164,7 +200,6 @@ public class AudioManager : MonoBehaviour
         PlayRandomSound(soundsCollectionSO.DiscoParty);
         float soundLength = soundsCollectionSO.DiscoParty[0].Clip.length;
         Utils.RunAfterDelay(this, soundLength, FightMusic);
-    } 
-
+    }
     #endregion
 }

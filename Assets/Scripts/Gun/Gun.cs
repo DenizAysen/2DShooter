@@ -7,6 +7,8 @@ using Cinemachine;
 public class Gun : MonoBehaviour
 {
     public static Action OnShoot;
+    public static Action<Grenade> OnGrenadeExplode;
+    public static Action<Grenade> OnGrenadeExplodeWithBeepLoop;
 
     #region SerializedFields
     [SerializeField] private Transform _bulletSpawnPoint;
@@ -15,6 +17,9 @@ public class Gun : MonoBehaviour
     [SerializeField] private float gunFireCD = .5f;
     [SerializeField] private GameObject muzzleFlash;
     [SerializeField] private float muzzleFlashTime = .05f;
+    [SerializeField] private Grenade grenadePrefab;
+    [SerializeField] private Transform grenadeSpawnPoint;
+    [SerializeField] private Transform grenadeParent;
     #endregion
 
     #region Privates
@@ -25,7 +30,8 @@ public class Gun : MonoBehaviour
     private float _lastFireTime = 0f;
     private Animator _animator;
     private CinemachineImpulseSource _impulseSource;
-    private Vector2 _direction; 
+    private Vector2 _direction;
+    private ObjectPool<Grenade> _grenadePool;
     #endregion
     private void Awake()
     {
@@ -39,6 +45,7 @@ public class Gun : MonoBehaviour
     private void Start()
     {
         CreateBulletPool();
+        CreateGrenadePool();
     }
     private void SubscribeEvents()
     {
@@ -46,6 +53,7 @@ public class Gun : MonoBehaviour
         OnShoot += FireAnimation;
         OnShoot += GunScreenShake;
         OnShoot += MuzzleFlash;
+        PlayerController.OnGrenade += ThrowGrenade;
     }
     private void OnDisable()
     {
@@ -57,10 +65,16 @@ public class Gun : MonoBehaviour
         OnShoot -= FireAnimation;
         OnShoot -= GunScreenShake;
         OnShoot -= MuzzleFlash;
+        PlayerController.OnGrenade -= ThrowGrenade;
     }
     public void ReleaseBulletFromPool(Bullet bullet)
     {
         _bulletPool.Release(bullet);
+    }
+    public void ReleaseGrenadeFromPool(Grenade grenade)
+    {
+        OnGrenadeExplode?.Invoke(grenade);
+        _grenadePool.Release(grenade);
     }
     private void CreateBulletPool()
     {
@@ -69,6 +83,15 @@ public class Gun : MonoBehaviour
             bullet => { bullet.gameObject.SetActive(false); }, 
             bullet => { Destroy(bullet); },
             false, 20, 40);
+    }
+    private void CreateGrenadePool()
+    {
+        _grenadePool = new ObjectPool<Grenade>(() => { return Instantiate(grenadePrefab,grenadeParent); },
+            grenade => { grenade.gameObject.SetActive(true); },
+            grenade => { grenade.gameObject.SetActive(false); },
+            grenade => { Destroy(grenade); },
+            false, 20, 40);
+
     }
     private void Update()
     {
@@ -93,6 +116,16 @@ public class Gun : MonoBehaviour
     {
         Bullet newBullet = _bulletPool.Get();
         newBullet.Init(this, _bulletSpawnPoint.position, _mousePos);
+    }
+    public void ThrowGrenade()
+    {
+        OnGrenadeExplodeWithBeepLoop?.Invoke(GetGrenadeFromGrenadePool());
+    }
+    private Grenade GetGrenadeFromGrenadePool()
+    {
+        Grenade newGrenade = _grenadePool.Get();
+        newGrenade.Init(this, grenadeSpawnPoint.position, _mousePos);
+        return newGrenade;
     }
     private void FireAnimation()
     {

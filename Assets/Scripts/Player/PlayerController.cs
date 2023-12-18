@@ -2,13 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.Pool;
 public class PlayerController : MonoBehaviour
 {
     public Vector2 MoveInput => _frameInput.Move;
     public static PlayerController Instance;
+    #region Actions
     public static Action OnJump;
     public static Action OnJetpack;
+    public static Action OnGrenade; 
+    #endregion
 
     #region Serialized Fields
     [SerializeField] private float _jumpStrength = 7f;
@@ -21,11 +24,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jetpackTime = .6f;
     [SerializeField] private TrailRenderer jetpackTrailRenderer;
     [SerializeField] private float jetpackStrength = 11f;
+    [SerializeField] private float grenadeThrowCD = .5f;
     #endregion
 
     #region Privates
     private PlayerInput _playerInput;
     private FrameInput _frameInput;
+    private float _lastGrenadeThrowTime = 0f;
     private bool _isGrounded = false;
     private Coroutine _jetpackRoutine;
     private bool _doubleJumpAvaible;
@@ -69,6 +74,7 @@ public class PlayerController : MonoBehaviour
         HandleSpriteFlip();
         GravityDelay();
         Jetpack();
+        Grenade();
     }
 
     private void FixedUpdate()
@@ -213,5 +219,23 @@ public class PlayerController : MonoBehaviour
 
         _jetpackRoutine = null;
         jetpackTrailRenderer.emitting = false;
+    }
+    private void Grenade()
+    {
+        //if (!_frameInput.Grenade) return;
+        //OnGrenade?.Invoke();
+        if(_frameInput.Grenade && CanThrowGrenade())
+        {           
+            OnGrenade?.Invoke();
+        }
+    }
+    private bool CanThrowGrenade()
+    {
+        bool _canThrow = Time.time >= _lastGrenadeThrowTime;
+        if (_canThrow)
+        {
+            _lastGrenadeThrowTime = Time.time + grenadeThrowCD;
+        }
+        return _canThrow;        
     }
 }
