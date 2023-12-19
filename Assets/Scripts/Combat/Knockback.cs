@@ -37,14 +37,34 @@ public class Knockback : MonoBehaviour
     public void GetKnockedBack(Vector3 hitDirection, float knockBackThrust)
     {
         _hitDirection = hitDirection;
+        //Debug.Log(gameObject.name + " Hit direct: " + hitDirection);
         _knockBackThrust = knockBackThrust;
-
+        //Debug.Log(gameObject.name + " tranform pos: " + transform.position);
+        //Debug.Log(gameObject.name + " difference: " + (transform.position - _hitDirection).normalized);
         OnKnockbackStart?.Invoke();
     }
     private void ApplyKnockbackForce()
     {
-        Vector3 difference = (transform.position - _hitDirection).normalized * _knockBackThrust * _rigidbody.mass;
-        _rigidbody.AddForce(difference, ForceMode2D.Impulse);
+        Vector3 difference;
+        if (_hitDirection.magnitude > 1)
+        {
+            difference = (transform.position - _hitDirection).normalized * _knockBackThrust * _rigidbody.mass;
+            _rigidbody.AddForce(difference, ForceMode2D.Impulse);
+        }
+        else
+        {
+            if(_hitDirection.x < 0)
+            {
+                difference = ((transform.position - _hitDirection).normalized * _knockBackThrust * _rigidbody.mass) * -1;
+            }
+            else
+            {
+                difference = (transform.position - _hitDirection).normalized * _knockBackThrust * _rigidbody.mass;
+            }
+            _rigidbody.AddForce(difference, ForceMode2D.Impulse);
+        }
+        
+        
         StartCoroutine(KnockRoutine());
     }
     private IEnumerator KnockRoutine()

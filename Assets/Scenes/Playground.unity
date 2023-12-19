@@ -1583,6 +1583,7 @@ GameObject:
   - component: {fileID: 2011273899}
   - component: {fileID: 2011273900}
   - component: {fileID: 2011273902}
+  - component: {fileID: 2011273903}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -8780,6 +8781,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1585995696}
   - component: {fileID: 1585995698}
+  - component: {fileID: 1585995699}
   - component: {fileID: 1585995697}
   m_Layer: 5
   m_Name: Score Text
@@ -8905,6 +8907,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1585995695}
   m_CullTransparentMesh: 1
+--- !u!114 &1585995699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1585995695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e2acaf326d21e4f8a8696f9a68336d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1608336918
 GameObject:
   m_ObjectHideFlags: 0
@@ -19021,8 +19035,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e652642db6260344cb636626629dc1de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  splatterPrefab: {fileID: 0}
-  deathVFX: {fileID: 0}
+  splatterPrefab: {fileID: 2285260091894521970, guid: ff8fac95a9737b248817c25f5d79b0f6, type: 3}
+  deathVFX: {fileID: 650610169498395376, guid: 46f764bb2094dce4e91f9e171755e344, type: 3}
   _startingHealth: 5
 --- !u!114 &2011273896
 MonoBehaviour:
@@ -19176,6 +19190,21 @@ MonoBehaviour:
     m_DissipationDistance: 100
     m_PropagationSpeed: 343
   m_DefaultVelocity: {x: 0.06, y: -0.08, z: 0}
+--- !u!114 &2011273903
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817729410}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f080c45ae1cfe64ab0b7f40d3fe9386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultMat: {fileID: 2100000, guid: 94e4e6a626acff749a61075da466a11c, type: 2}
+  whiteFlashMat: {fileID: 2100000, guid: 04ab2f19df2225845aa79bf8e057d564, type: 2}
+  flashTime: 0.1
 --- !u!1 &2043640393
 GameObject:
   m_ObjectHideFlags: 0

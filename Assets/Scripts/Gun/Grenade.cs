@@ -10,6 +10,7 @@ public class Grenade : MonoBehaviour
     [SerializeField] private float rotateSpeed = 10f;
     [SerializeField] private int damageAmount = 3;
     [SerializeField] private float knockbackThrust = 0f;
+    [SerializeField] private LayerMask enemyLayerMask;
 
     [Header("Grenade")]
     [SerializeField] private GameObject grenadeLight;
@@ -73,14 +74,14 @@ public class Grenade : MonoBehaviour
             StopCoroutine(_beepRoutine);
             _beepRoutine = null;
         }
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position,grenadeExplosionRadius);
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position,grenadeExplosionRadius,enemyLayerMask);
 
-        IDamageable damageable;
+        Health health;
         foreach (Collider2D collider in colliders)
         {
-            if (collider.GetComponent<IDamageable>() == null) continue;
-            damageable = collider.GetComponent<IDamageable>();
-            damageable.TakeDamage(damageAmount, knockbackThrust);
+            if (collider.GetComponent<Health>() == null) continue;
+            health = collider.GetComponent<Health>();
+            health?.TakeDamage(damageAmount);
         }
         Instantiate(grenadeExplosionVFX, transform.position, transform.rotation);
         _canBeep = false;

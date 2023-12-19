@@ -217,8 +217,12 @@ MonoBehaviour:
   rotateSpeed: 10
   damageAmount: 3
   knockbackThrust: 0
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 128
   grenadeLight: {fileID: 80791029}
   grenadeExplosionVFX: {fileID: 1837638292693543171, guid: bd621c6e1e00af34191ca1d4fb3a7bbf, type: 3}
+  grenadeExplosionRadius: 3
 --- !u!50 &5440816734037975377
 Rigidbody2D:
   serializedVersion: 4

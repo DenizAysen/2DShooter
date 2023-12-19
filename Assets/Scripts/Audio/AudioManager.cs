@@ -15,7 +15,17 @@ public class AudioManager : MonoBehaviour
 
     private Coroutine _grenadeRoutine;
     private AudioSource _currentMusic;
+
+    public static AudioManager Instance;
     #region Unity Methods
+    private void Awake()
+    {
+        if(Instance != null && Instance != this)
+        {
+            return;
+        }
+        Instance = this;
+    }
     private void OnEnable()
     {
         SubscribeEvents();
@@ -166,6 +176,10 @@ public class AudioManager : MonoBehaviour
     private void OnGrenade(Grenade grenade)
     {
         _grenadeRoutine = StartCoroutine(GrenadeExplosionWithBeepSound(grenade));
+    }
+    public void OnPlayerHit()
+    {
+        PlayRandomSound(soundsCollectionSO.PlayerHit);
     }
     private IEnumerator GrenadeExplosionWithBeepSound(Grenade grenade)
     {
