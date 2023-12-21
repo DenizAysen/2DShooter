@@ -23,7 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float coyoteTime = .5f;
     [SerializeField] private float jetpackTime = .6f;
     [SerializeField] private TrailRenderer jetpackTrailRenderer;
-    [SerializeField] private float jetpackStrength = 11f;
+    [SerializeField] private float jetpackStrength = 11f; 
+    [SerializeField] private float maxFallSpeedVelocity = -20f;
     [SerializeField] private float grenadeThrowCD = .5f;
     #endregion
 
@@ -81,6 +82,11 @@ public class PlayerController : MonoBehaviour
     {
         ExtraGravity();
     }
+    private void OnDestroy()
+    {
+        Fade fade = FindObjectOfType<Fade>();
+        fade.FadeInAndOut();
+    }
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Ground"))
@@ -124,13 +130,17 @@ public class PlayerController : MonoBehaviour
     }
     private void ExtraGravity()
     {
-        if(! (_timeInAir > gravityDelay))
+        if(!(_timeInAir > gravityDelay))
         {
             return;
         }
         else
         {
             _rigidBody.AddForce(new Vector2(0f, -extraGravity * Time.deltaTime));
+            if(_rigidBody.velocity.y < maxFallSpeedVelocity)
+            {
+                _rigidBody.velocity = new Vector2(_rigidBody.velocity.x, maxFallSpeedVelocity);
+            }
         }
     }
     private void GatherInput()

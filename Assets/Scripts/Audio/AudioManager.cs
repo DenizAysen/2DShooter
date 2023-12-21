@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -36,7 +37,7 @@ public class AudioManager : MonoBehaviour
         PlayerController.OnJump += OnJump;
         PlayerController.OnJetpack += OnJetpack;
         PlayerController.OnGrenade += OnGrenadeShoot;
-        Health.OnDeath += OnDeath;
+        Health.OnDeath += HandleDeath;
         Gun.OnGrenadeExplodeWithBeepLoop += OnGrenade;
         Gun.OnGrenadeExplode += ExplosionSound;
         DiscoBallManager.OnDiscoBallHitEvent += DiscoBallMusic;
@@ -53,7 +54,7 @@ public class AudioManager : MonoBehaviour
         PlayerController.OnJump -= OnJump;
         PlayerController.OnJetpack -= OnJetpack;
         PlayerController.OnGrenade -= OnGrenadeShoot;
-        Health.OnDeath -= OnDeath;
+        Health.OnDeath -= HandleDeath;
         Gun.OnGrenadeExplodeWithBeepLoop -= OnGrenade;
         Gun.OnGrenadeExplode -= ExplosionSound;
         DiscoBallManager.OnDiscoBallHitEvent -= DiscoBallMusic;
@@ -165,6 +166,10 @@ public class AudioManager : MonoBehaviour
     {
         PlayRandomSound(soundsCollectionSO.Splat);
     }
+    private void OnDeath()
+    {
+        PlayRandomSound(soundsCollectionSO.Splat);
+    }
     private void OnJetpack()
     {
         PlayRandomSound(soundsCollectionSO.Jetpack);
@@ -202,6 +207,10 @@ public class AudioManager : MonoBehaviour
     {
         PlayRandomSound(soundsCollectionSO.GrenadeExplosion);
     }
+    private void MegaKill()
+    {
+        PlayRandomSound(soundsCollectionSO.MegaKill);
+    }
     #endregion
 
     #region Music
@@ -214,6 +223,41 @@ public class AudioManager : MonoBehaviour
         PlayRandomSound(soundsCollectionSO.DiscoParty);
         float soundLength = soundsCollectionSO.DiscoParty[0].Clip.length;
         Utils.RunAfterDelay(this, soundLength, FightMusic);
+    }
+    #endregion
+
+    #region Custom Sfx Logic
+
+    private List<Health> _deathList = new List<Health>();
+    private Coroutine _deathRoutine;
+
+    private void HandleDeath(Health health)
+    {
+        bool isEnemy = health.GetComponent<Enemy>();
+
+        if (isEnemy)
+        {
+            _deathList.Add(health);
+        }
+        if(_deathRoutine == null)
+        {
+            _deathRoutine = StartCoroutine(DeathWindowRoutine());
+        }
+    }
+    private IEnumerator DeathWindowRoutine()
+    {
+        yield return null;
+
+        int megaKillAmount = 3;
+        if(_deathList.Count >= megaKillAmount)
+        {
+            MegaKill();
+        }
+
+        OnDeath();
+
+        _deathList.Clear();
+        _deathRoutine = null;
     }
     #endregion
 }
